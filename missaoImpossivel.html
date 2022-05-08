@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão impossível</title>
+    <style>
+        body{
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            background-color: rgb(17, 17, 17);
+            margin: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button{
+            min-width: 150px;
+            min-height: 50px;
+            padding: 5px 10px;
+            font-size: 1.8rem;
+        }
+        .missao {
+            font-size: 15px;
+            color: black;
+            background-color: white;
+            margin: 20px;
+            padding: 5px;
+            border-radius: 3px;
+            font-style: italic;
+        }
+        .sucesso {
+            font-size: 70px;
+            color: white;
+            background-color: green;
+            margin: 20px;
+            border: blacksolid 3px;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+        }
+        .falha {
+            font-size: 70px;
+            color: white;
+            background-color: red;
+            margin: 20px;
+            padding: 15px;
+            border: blacksolid 3px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #contador{
+            display: none;
+            background-color: whitesmoke;
+            text-align: center;
+            width: 50px;
+            height: 50px;
+            font-size: 40px;
+            margin: 20px;
+            border-radius: 100px;
+            padding: 20px;
+        }
+        #btnEnter{
+            display: none;
+            margin: 20px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <button id="iniciar">Iniciar missão</button>
+    <div id="contador"></div>
+    <div id="infos"></div>
+    <!-- <input type="number" id="valor">-->
+    <button id="btnEnter">Enter</button>
+
+    <script>
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        var count = 30
+        var nIntervId
+        var infos = document.querySelector('#infos')
+        var iniciar = document.querySelector("#iniciar")
+        var num = Math.floor(Math.random()*31)
+        var contador = document.querySelector('#contador')
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        document.addEventListener('keypress', enter)
+        function enter(event){
+            if(event.key=='Enter'){
+                document.removeEventListener('keypress', enter)
+                document.querySelector('#iniciar').click()
+            }
+        }
+        iniciar.addEventListener('click', iniciarMissao)    
+        function iniciarMissao() {
+            console.log(num)
+            iniciar.remove()
+            contador.style.display = 'block'
+            // let valor = document.querySelector('#valor')
+            // valor.focus()
+            var valor = document.createElement('input')
+            valor.setAttribute('id', 'valor')
+            valor.setAttribute('type', 'number')
+            document.body.appendChild(valor)
+            valor.focus()
+            // var btnEnter = document.createElement('button')
+            // btnEnter.setAttribute('id', 'btnEnter')
+            // btnEnter.innerHTML = 'Enter'
+            // document.body.appendChild(btnEnter)
+            var btnEnter = document.querySelector('#btnEnter')
+            btnEnter.style.display = 'inline-block'
+            contador.innerHTML = count
+            infos.setAttribute('class', 'missao')
+            nIntervId = setInterval(contagemRegressiva, 1000)
+            iniciar.removeEventListener('click', iniciarMissao)
+        }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        function contagemRegressiva(){
+             count--
+             contador.innerHTML = count
+             if(count<=0){
+                 missaoFalhou()
+             }
+         }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         function missaoFalhou(){
+            clearInterval(nIntervId)
+            contador.remove()
+            contador.remove()
+            btnEnter.remove()
+            valor.remove()
+            infos.setAttribute('class', 'falha')
+            infos.innerHTML = 'BUM!'
+         }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         function missaoCumprida(){
+            clearInterval(nIntervId)
+            contador.remove()
+            contador.remove()
+            btnEnter.remove()
+            valor.remove()
+            infos.setAttribute('class', 'sucesso')
+            infos.innerHTML = 'Missão cumprida!'
+         }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        document.addEventListener('keypress', enter2)
+        function enter2(event){
+            if(event.key=='Enter'){
+                document.removeEventListener('keypress', enter)
+                document.querySelector('#btnEnter').click()
+            }
+        }
+        document.querySelector('#btnEnter').addEventListener('click', verifica)
+        function verifica(){
+            var valor = document.querySelector('#valor')
+            console.log(valor.value)
+            if(valor.value==false){
+                infos.innerHTML = 'Boa sorte!'
+            }
+            else if(valor.value==num){
+                missaoCumprida()
+            }
+            else if(valor.value<num){
+                infos.innerHTML = 'DICA: O número é maior!'
+            }
+            else if(valor.value>num){
+                infos.innerHTML = 'DICA: O número é menor!'
+            }
+            else{
+                missaoFalhou()
+            }
+            valor.value = ''
+        }
+    </script>
+</body>
+
+</html>

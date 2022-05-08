@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+        div#input{
+            display: flex;
+            justify-content: center;
+        }
+        #board{
+            width: 800px;
+            height: 300px;
+            background-color: rgb(106, 185, 255);
+            margin: 20px;
+            border-radius: 30px;
+            padding: 30px;
+        }
+        span{
+            position: relative;
+            width: 100px;
+            height: 20px;
+            margin: 20px;
+            border: 2px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="input">
+        Informe as palavras (separando-as por vírgulas)
+        <input type="text" id="str">
+        <button id="btnOk">OK</button>
+    </div>
+    <div id="divResultado">
+    </div>
+
+    <script>
+
+        document.querySelector('#btnOk').addEventListener('click', ok)
+        let palavras = []
+        let palavras2 = []
+
+        function ok(){
+            let str = document.querySelector('#str').value
+            palavras = str.toUpperCase().split(', ').sort()
+            if(str){
+                mostraTela(palavras)
+            }else{
+                alert('Por favor, informe as palavras')
+            }
+            document.querySelector('#btnOk').removeEventListener('click', ok)
+        }
+        
+        function mostraTela(palavras){
+            let board = document.createElement('div')
+            board.setAttribute('id', 'board')
+            document.body.appendChild(board)
+
+                for(let i=0; i<palavras.length; i++){
+                    let span = document.createElement('span')
+                    span.setAttribute('class', 'span')
+                    span.innerHTML = palavras[i]
+                    span.style.left = Math.random()*300 + 'px'
+                    span.style.top = Math.random()*300 + 'px'
+                    board.appendChild(span)
+                }
+            console.log(palavras)    
+            board.addEventListener('click', marca)
+            }
+            
+            function marca(){
+                const clickedElement = event.target
+                if (clickedElement.tagName === 'SPAN') {
+                    clickedElement.style.color = '#ddd'
+                    clickedElement.style.border = '2px solid #ddd'
+                    palavras2.push(clickedElement.innerText)
+                    console.log(palavras2)
+                }
+                if(palavras.length==palavras2.length){
+                    verificar()
+                }
+            }
+
+            function verificar(){
+                let acertos=0
+                let erros = []
+                for(i=0; i<palavras.length; i++){
+                   if(palavras[i]==palavras2[i]){
+                        acertos++
+                   }
+                   else{
+                     erros.push(` ${palavras2[i]}`)
+                   }
+                }
+                let divResultado = document.querySelector('#divResultado')
+                let resultado = document.createElement('p')
+                resultado.innerHTML = `Você marcou ${acertos} do total de ${palavras.length} Palavras. Palavras na ordem errada:${erros}`
+                divResultado.appendChild(resultado)
+        }
+    </script>
+</body>
+</html>
